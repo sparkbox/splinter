@@ -1,6 +1,6 @@
 {
   "name": "scss-splinter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,8 @@
     "url": "git@github.com:sparkbox/splinter.git",
     "type": "git"
   },
-  "author": "Adam Simpson <adam@heysparkbox.com>"
+  "author": "Adam Simpson <adam@heysparkbox.com>",
+  "engine": {
+    "node": ">=4.3.2"
+  }
 }
