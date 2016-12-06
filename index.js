@@ -5,12 +5,11 @@ const readline = require('readline');
 const parse = require('./parseSCSS');
 
 module.exports = (params) => {
-  return new Promise((resolve, reject) => {
-    let promises = [];
-    const content = fs.readFileSync(params.base).toString();
+  const splitter = new Promise((resolve) => {
+    const promises = [];
 
     const rl = readline.createInterface({
-      input: fs.createReadStream(params.base)
+      input: fs.createReadStream(params.base),
     });
 
     rl.on('line', (line) => {
@@ -24,11 +23,19 @@ module.exports = (params) => {
 
     rl.on('close', () => {
       Promise.all(promises).then((data) => {
-        const global = data.map(x => x.css);
-        const splits = data.map(x => x.splits.join(''));
-        fs.writeFileSync(params.partial, splits.join(''))
+        const global = data.map((x) => {
+          const css = x.css;
+          return css;
+        });
+        const splits = data.map((x) => {
+          const split = x.splits.join('');
+          return split;
+        });
+        fs.writeFileSync(params.partial, splits.join(''));
         resolve(global.join(''));
       });
     });
-  })
+  });
+
+  return splitter;
 };
