@@ -12,21 +12,32 @@ const parser = (css) => {
   */
   const brandParse = postcss.plugin('brand-parse', (options) => {
     return (global, result) => {
-      global.walkRules(rule => {
-        rule.walkAtRules(at => {
-          if (/brand/.test(at.params)) {
-            splits.push(`${rule.selector} {`);
+      global.walkAtRules(at => {
+        if (/brand/.test(at.params)) {
+          if (at.parent.type === 'atrule') {
+            splits.push(`@${at.parent.name} ${at.parent.params} {`);
             splits.push(at.toString());
             splits.push('}');
-
-            at.remove();
+          } else {
+            splits.push(`${at.parent.selector} {`);
+            splits.push(at.toString());
+            splits.push('}');
           }
-        });
 
+          at.remove();
+        }
+      });
+
+      global.walkRules(rule => {
         rule.walkDecls(decl => {
           if (/brand-/.test(decl.value)) {
-            splits.push(`${rule.selector} { ${decl.toString()}; }`);
-
+            if (rule.parent.type === 'atrule') {
+              splits.push(`@${rule.parent.name} ${rule.parent.params} {`);
+              splits.push(`${rule.selector} { ${decl.toString()}; }`);
+              splits.push('}');
+            } else {
+              splits.push(`${rule.selector} { ${decl.toString()}; }`);
+            }
             decl.remove();
           }
         });
