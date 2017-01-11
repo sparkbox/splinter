@@ -13,9 +13,11 @@ const parser = (css) => {
   const parseAtRule = (at) => {
     if (/brand/.test(at.params)) {
       if (at.parent.type === 'atrule') {
-        splits.push(`@${at.parent.name} ${at.parent.params} {`);
-        splits.push(at.toString());
-        splits.push('}');
+        if (!/brand/.test(at.parent.params)) {
+          splits.push(`@${at.parent.name} ${at.parent.params} {`);
+          splits.push(at.toString());
+          splits.push('}');
+        }
       } else {
         splits.push(`${at.parent.selector} {`);
         splits.push(at.toString());

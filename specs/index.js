@@ -93,4 +93,21 @@ div {
       expect(x.splits[1]).to.equal('div span span { color: brand-color(c4); }');
     });
   });
+
+  it('does not unwrap doubly nested brand mixins', function () {
+    const sassString = `
+body {
+  margin: 0;
+
+  @include brand(foo) {
+    @include brand-text();
+  }
+}
+`;
+    const parsed = parse(sassString);
+
+    parsed.then(x => {
+      expect(x.splits[1]).to.equal('@include brand(mozo) {\n    @include brand-text();\n  }');
+    });
+  });
 });
