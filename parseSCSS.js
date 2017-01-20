@@ -2,7 +2,7 @@
 
 const postcss = require('postcss');
 const syntax = require('postcss-scss');
-const nest = require("postcss-nested");
+const nest = require('postcss-nested');
 
 const parser = (css) => {
   const splits = [];

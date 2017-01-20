@@ -1,6 +1,6 @@
 {
   "name": "scss-splinter",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "postcss": "^5.2.6",
-    "postcss-nested": "^1.0.0",
+    "postcss-nested": "git+https://github.com/sparkbox/postcss-nested/",
     "postcss-scss": "^0.4.0"
   },
   "repository": {

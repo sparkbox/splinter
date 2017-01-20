@@ -13,7 +13,7 @@ describe('scss split creation', function () {
   `;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
+    return parsed.then(x => {
       expect(x.splits[0]).to.equal('h1 { color: brand-color(c4); }');
     });
   });
@@ -30,7 +30,7 @@ describe('scss split creation', function () {
   `;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
+    return parsed.then(x => {
       expect(x.splits[1])
         .to.equal('@include brand(foo) {\n      margin: 0;\n    }');
     });
@@ -48,7 +48,7 @@ describe('scss split creation', function () {
   `;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
+    return parsed.then(x => {
       expect(x.splits[0]).to.equal('div h2 { color: brand-color(c4); }');
     });
   });
@@ -68,7 +68,7 @@ div {
 }`;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
+    return parsed.then(x => {
       expect(x.splits[0]).to.equal('@media (min-width: 40em) {');
       expect(x.splits[1]).to.equal('@include brand(foo) {\n        div span span {\n            color: red\n        }\n    }');
     });
@@ -88,7 +88,7 @@ div {
 }`;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
+    return parsed.then(x => {
       expect(x.splits[0]).to.equal('@media (min-width: 40em) {');
       expect(x.splits[1]).to.equal('div span span { color: brand-color(c4); }');
     });
@@ -106,8 +106,29 @@ body {
 `;
     const parsed = parse(sassString);
 
-    parsed.then(x => {
-      expect(x.splits[1]).to.equal('@include brand(mozo) {\n    @include brand-text();\n  }');
+    return parsed.then(x => {
+      expect(x.splits[1]).to.equal('@include brand(foo) {\n    @include brand-text();\n  }');
+    });
+  });
+
+  it('does not orphan one-line includes', function () {
+    const sassString = `
+.foo {
+  @media (min-width: 40em) {
+    @include clearfix;
+  }
+}
+`;
+    const parsed = parse(sassString);
+
+    return parsed.then(x => {
+      expect(x.css).to.equal(`
+@media (min-width: 40em) {
+    .foo {
+        @include clearfix
+    }
+}
+`);
     });
   });
 });
