@@ -18,7 +18,10 @@ module.exports = (params) => {
       if (match) {
         const name = `src/scss/_${match[1]}.scss`;
         const file = fs.readFileSync(name).toString();
-        promises.push(parse(file));
+        promises.push(parse({
+          css: file,
+          keyword: params.keyword || null,
+        }));
       }
     });
 

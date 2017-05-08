@@ -4,7 +4,7 @@ scss-splinter enables the creation of multiple stylesheets from a common set of 
 
 ## Usage
 
-scss-splinter accepts an options object that specifies a `partial` and a `base`.
+scss-splinter accepts an options object that specifies a `partial`, a `base`, and a optional `keyword` to grep for.
 
 ```js
   const parse = require('scss-splinter');
@@ -12,6 +12,7 @@ scss-splinter accepts an options object that specifies a `partial` and a `base`.
   parse({
     partial: 'src/scss/_brands.scss',
     base: 'src/scss/_base.scss',
+    keyword: 'split',
   })
 ```
 
@@ -29,6 +30,7 @@ scss-splinter fills the `partial` file with "split" `scss` and returns a promise
   parse({
     partial: 'src/scss/_brands.scss',
     base: 'src/scss/_base.scss',
+    keyword: 'split',
   })
   .then((scss) => {
     const compiledGlobal = nodeSass.renderSync({
