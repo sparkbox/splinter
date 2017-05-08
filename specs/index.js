@@ -11,7 +11,7 @@ describe('scss split creation', function () {
     color: brand-color(c4);
   }
   `;
-    const parsed = parse(sassString);
+    const parsed = parse({ css:sassString });
 
     return parsed.then(x => {
       expect(x.splits[0]).to.equal('h1 { color: brand-color(c4); }');
@@ -28,7 +28,7 @@ describe('scss split creation', function () {
     }
   }
   `;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.splits[1])
@@ -46,7 +46,7 @@ describe('scss split creation', function () {
     }
   }
   `;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.splits[0]).to.equal('div h2 { color: brand-color(c4); }');
@@ -66,7 +66,7 @@ div {
     }
   }
 }`;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.splits[0]).to.equal('@media (min-width: 40em) {');
@@ -86,7 +86,7 @@ div {
     }
   }
 }`;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.splits[0]).to.equal('@media (min-width: 40em) {');
@@ -104,7 +104,7 @@ body {
   }
 }
 `;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.splits[1]).to.equal('@include brand(foo) {\n    @include brand-text();\n  }');
@@ -119,7 +119,7 @@ body {
   }
 }
 `;
-    const parsed = parse(sassString);
+    const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.css).to.equal(`
@@ -129,6 +129,44 @@ body {
     }
 }
 `);
+    });
+  });
+
+  it('will search for custom keywords in declarations', function () {
+    const sassString = `
+  h1 {
+    foo: bar;
+    color: split-color(c4);
+  }
+  `;
+    const parsed = parse({
+      css: sassString,
+      keyword: 'split'
+    });
+
+    return parsed.then(x => {
+      expect(x.splits[0]).to.equal('h1 { color: split-color(c4); }');
+    });
+  });
+
+  it('will search for custom keywords in mixin names', function () {
+    const sassString = `
+  h1 {
+    foo: bar;
+
+    @include split(foo) {
+      margin: 0;
+    }
+  }
+  `;
+    const parsed = parse({
+      css: sassString,
+      keyword: 'split',
+    });
+
+    return parsed.then(x => {
+      expect(x.splits[1])
+        .to.equal('@include split(foo) {\n      margin: 0;\n    }');
     });
   });
 });

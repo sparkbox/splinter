@@ -4,6 +4,8 @@ const postcss = require('postcss');
 const syntax = require('postcss-scss');
 const nest = require('postcss-nested');
 
+let params = {};
+
 const parser = (css) => {
   const splits = [];
 
@@ -11,9 +13,10 @@ const parser = (css) => {
   * @param {object} at - an at rule, e.g. @media
   */
   const parseAtRule = (at) => {
-    if (/brand/.test(at.params)) {
+    const regex = new RegExp(params.keyword);
+    if (regex.test(at.params)) {
       if (at.parent.type === 'atrule') {
-        if (!/brand/.test(at.parent.params)) {
+        if (!regex.test(at.parent.params)) {
           splits.push(`@${at.parent.name} ${at.parent.params} {`);
           splits.push(at.toString());
           splits.push('}');
@@ -33,7 +36,8 @@ const parser = (css) => {
   */
   const parseDecl = (rule) => {
     rule.walkDecls(decl => {
-      if (/brand-/.test(decl.value)) {
+      const regex = new RegExp(`${params.keyword}-`);
+      if (regex.test(decl.value)) {
         if (rule.parent.type === 'atrule') {
           splits.push(`@${rule.parent.name} ${rule.parent.params} {`);
           splits.push(`${rule.selector} { ${decl.toString()}; }`);
@@ -58,15 +62,18 @@ const parser = (css) => {
   });
 
   /**
-  * @param {string} css - the css string to parse.
+  * @param {object} config - contains the css string and an optional keyword to search for.
   * @returns {Promise} object - containing the global css and the split code
   */
-  const parseSCSS = (css) => {
+  const parseSCSS = (config) => {
+    params = config;
+    params.keyword = config.keyword || 'brand';
+
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap
-    const processor = postcss([nest({bubble: ['brand']}), brandParse()]);
+    const processor = postcss([nest({bubble: [params.keyword]}), brandParse()]);
 
-    return processor.process(css, { syntax })
+    return processor.process(params.css, { syntax })
     .then(x => ({ css: x.css, splits: splits }));
   };
 
