@@ -40,3 +40,18 @@ scss-splinter fills the `partial` file with "split" `scss` and returns a promise
     fs.writeFileSync('global.css', compiledGlobal.css.toString());
   });
 ```
+
+# cwd
+
+If your `SCSS` files are not located at `src/scss`, you can pass `cwd` in the params:
+
+```js
+  const parse = require('scss-splinter');
+
+  parse({
+    partial: '_brands.scss',
+    base: '_base.scss',
+    keyword: 'split',
+    cwd: 'i/keep/my/scss/files/here',
+  })
+```

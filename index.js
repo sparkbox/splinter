@@ -1,10 +1,13 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
 const parse = require('./parseSCSS');
 
 module.exports = (params) => {
+  const workingDir = parms.cwd || 'src/scss/';
+
   return new Promise((resolve, reject) => {
     let promises = [];
     const content = fs.readFileSync(params.base).toString();
@@ -16,7 +19,7 @@ module.exports = (params) => {
     rl.on('line', (line) => {
       const match = line.match(/@import "(.*)"/);
       if (match) {
-        const name = `src/scss/_${match[1]}.scss`;
+        const name = path.join(workingDir, `_${match[1]}.scss`);
         const file = fs.readFileSync(name).toString();
         promises.push(parse({
           css: file,
