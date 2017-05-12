@@ -7,13 +7,15 @@ const parse = require('./parseSCSS');
 
 module.exports = (params) => {
   const workingDir = params.cwd || 'src/scss/';
+  const base = path.join(workingDir, params.base);
 
   return new Promise((resolve, reject) => {
     let promises = [];
-    const content = fs.readFileSync(path.join(workingDir, params.base)).toString();
+
+    const content = fs.readFileSync(base).toString();
 
     const rl = readline.createInterface({
-      input: fs.createReadStream(path.join(workingDir, params.base))
+      input: fs.createReadStream(base),
     });
 
     rl.on('line', (line) => {
