@@ -6,14 +6,14 @@ const readline = require('readline');
 const parse = require('./parseSCSS');
 
 module.exports = (params) => {
-  const workingDir = parms.cwd || 'src/scss/';
+  const workingDir = params.cwd || 'src/scss/';
 
   return new Promise((resolve, reject) => {
     let promises = [];
-    const content = fs.readFileSync(params.base).toString();
+    const content = fs.readFileSync(path.join(workingDir, params.base)).toString();
 
     const rl = readline.createInterface({
-      input: fs.createReadStream(params.base)
+      input: fs.createReadStream(path.join(workingDir, params.base))
     });
 
     rl.on('line', (line) => {
@@ -32,7 +32,7 @@ module.exports = (params) => {
       Promise.all(promises).then((data) => {
         const global = data.map(x => x.css);
         const splits = data.map(x => x.splits.join(''));
-        fs.writeFileSync(params.partial, splits.join(''))
+        fs.writeFileSync(path.join(workingDir, params.partial), splits.join(''))
         resolve(global.join(''));
       });
     });
