@@ -69,11 +69,13 @@ const parser = (css) => {
     params = config;
     params.keyword = config.keyword || 'brand';
 
+    const css = params.css.replace(/(\/\/.*)/g, '');
+
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap
     const processor = postcss([nest({bubble: [params.keyword]}), brandParse()]);
 
-    return processor.process(params.css, { syntax })
+    return processor.process(css, { syntax })
     .then(x => ({ css: x.css, splits: splits }));
   };
 
