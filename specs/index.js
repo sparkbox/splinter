@@ -169,4 +169,19 @@ body {
         .to.equal('@include split(foo) {\n      margin: 0;\n    }');
     });
   });
+
+  it('strips comments', function () {
+    const sassString = `
+h1 {
+  // comment
+  foo: bar;
+}
+  `;
+    const parsed = parse({ css: sassString });
+
+    return parsed.then(x => {
+      expect(x.css)
+        .to.equal('\nh1 {\n  \n  foo: bar;\n}\n  ');
+    });
+  });
 });
