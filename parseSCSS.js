@@ -69,7 +69,8 @@ const parser = (css) => {
     params = config;
     params.keyword = config.keyword || 'brand';
 
-    const css = params.css.replace(/(\/\/.*)/g, '');
+    // remove any line where the first non-space character is `//`
+    css = params.css.replace(/^\s*\/\/.*/gm, '');
 
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap

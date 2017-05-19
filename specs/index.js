@@ -175,13 +175,29 @@ body {
 h1 {
   // comment
   foo: bar;
+  // another comment
 }
   `;
     const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.css)
-        .to.equal('\nh1 {\n  \n  foo: bar;\n}\n  ');
+        .to.equal('\nh1 {\n\n  foo: bar;\n\n}\n  ');
     });
   });
+
+  it('don\'t strip URLs', function () {
+    const sassString = `
+  h1 {
+  foo: "http://google.com";
+  }
+  `;
+    const parsed = parse({ css: sassString });
+
+    return parsed.then(x => {
+      expect(x.css)
+        .to.equal('\n  h1 {\n  foo: "http://google.com";\n  }\n  ');
+    });
+  });
+
 });
