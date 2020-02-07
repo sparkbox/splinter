@@ -200,4 +200,21 @@ h1 {
     });
   });
 
+  it('handles nested variables', function () {
+    const sassString = `
+h1 {
+  $size: 1rem;
+  div {
+    top: $size;
+  }
+}
+  `;
+    const parsed = parse({ css: sassString });
+
+    return parsed.then(x => {
+      expect(x.css)
+        .to.equal('\nh1 div {\n    top: 1rem;\n}\n  ');
+    });
+  });
+
 });
