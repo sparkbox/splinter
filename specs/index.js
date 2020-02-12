@@ -200,20 +200,53 @@ h1 {
     });
   });
 
-  it('handles nested variables', function () {
+  it.only('handles nested variables', function () {
     const sassString = `
 h1 {
   $size: 1rem;
   div {
     top: $size;
   }
-}
-  `;
+}`;
     const parsed = parse({ css: sassString });
 
     return parsed.then(x => {
       expect(x.css)
-        .to.equal('\nh1 div {\n    top: 1rem;\n}\n  ');
+        .to.equal(`
+h1 {
+  $size: 1rem
+}
+h1 div {
+  $size: 1rem;
+  top: $size;
+}`);
+    });
+  });
+
+  it('handles @imports', function () {
+    const sassString = `@import 'specs/import.scss';`;
+    const parsed = parse({ css: sassString });
+
+    return parsed.then(x => {
+      expect(x.css)
+        .to.equal('h1 {\n  color: red;\n}');
+    });
+  });
+
+  it('handles variables in @imports', function () {
+    const sassString = `
+  @import 'specs/imported-vars.scss';
+
+  h1 {
+    div {
+      top: $size;
+    }
+  }`;
+    const parsed = parse({ css: sassString });
+
+    return parsed.then(x => {
+      expect(x.css)
+        .to.equal('h1 div {\n    top: 16px;\n}');
     });
   });
 

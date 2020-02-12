@@ -67,7 +67,7 @@ const parser = (css) => {
   * @param {object} config - contains the css string and an optional keyword to search for.
   * @returns {Promise} object - containing the global css and the split code
   */
-  const parseSCSS = (config) => {
+  const parseSCSS = async (config) => {
     params = config;
     params.keyword = config.keyword || 'brand';
 
@@ -76,7 +76,7 @@ const parser = (css) => {
 
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap
-    const processor = postcss([atImports, vars, nest({bubble: [params.keyword]}), brandParse()]);
+    const processor = await postcss([atImports(), nest({bubble: [params.keyword]}), brandParse()]);
 
     return processor.process(css, { from: undefined, syntax })
     .then(x => ({ css: x.css, splits: splits }));
