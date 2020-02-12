@@ -10,10 +10,11 @@
   "dependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.0.3",
-    "postcss": "^7.0.26",
+    "postcss": "6.0.23",
+    "postcss-import": "^12.0.1",
     "postcss-nested": "https://github.com/sparkbox/postcss-nested/tarball/master",
-    "postcss-nested-vars": "^1.0.0",
-    "postcss-scss": "^0.4.0"
+    "postcss-scss": "^0.4.0",
+    "postcss-simple-vars": "^5.0.2"
   },
   "repository": {
     "url": "git@github.com:sparkbox/splinter.git",

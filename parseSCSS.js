@@ -3,7 +3,8 @@
 const postcss = require('postcss');
 const syntax = require('postcss-scss');
 const nest = require('postcss-nested');
-const vars = require('postcss-nested-vars');
+const vars = require('postcss-simple-vars');
+const atImports = require('postcss-import');
 
 let params = {};
 
@@ -75,9 +76,9 @@ const parser = (css) => {
 
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap
-    const processor = postcss([vars(), nest({bubble: [params.keyword]}), brandParse()]);
+    const processor = postcss([atImports(), vars(), nest({bubble: [params.keyword]}), brandParse()]);
 
-    return processor.process(css, { syntax })
+    return processor.process(css, { from: undefined, syntax })
     .then(x => ({ css: x.css, splits: splits }));
   };
 
