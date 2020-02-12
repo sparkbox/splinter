@@ -76,7 +76,7 @@ const parser = (css) => {
 
     //https://github.com/postcss/postcss-nested#options
     //use the bubble option to specify mixins to unwrap
-    const processor = postcss([atImports(), vars(), nest({bubble: [params.keyword]}), brandParse()]);
+    const processor = postcss([atImports, vars, nest({bubble: [params.keyword]}), brandParse()]);
 
     return processor.process(css, { from: undefined, syntax })
     .then(x => ({ css: x.css, splits: splits }));
